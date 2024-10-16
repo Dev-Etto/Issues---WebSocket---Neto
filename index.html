@@ -150,41 +150,41 @@
         "Horácio",
       ];
 
-      function getRandomCharacter() {
+      const getRandomCharacter = () => {
         const randomIndex = Math.floor(Math.random() * disneyCharacters.length);
         const uniqueTag = Math.floor(Math.random() * 1000);
         return disneyCharacters[randomIndex] + "@" + uniqueTag;
-      }
+      };
 
-      function joinChat() {
+      const joinChat = () => {
         username = document.getElementById("username").value;
         if (!username) return alert("Por favor, insira um nome");
 
         startChat();
-      }
+      };
 
-      function joinAsAnonymous() {
+      const joinAsAnonymous = () => {
         username = getRandomCharacter();
         startChat();
-      }
+      };
 
-      function startChat() {
+      const startChat = () => {
         document.getElementById("login").style.display = "none";
         document.getElementById("chat").style.display = "block";
         document.getElementById("displayName").innerText = username;
 
         //lembra de pegar o link do ngrok da porta 8080 hahaha
         socket = new WebSocket(
-          "https://1763-2804-2c14-36-9e00-d970-bd55-4fab-22c6.ngrok-free.app"
+          "https://fdb9-2804-2c14-36-9e00-719c-38d3-2bda-f8eb.ngrok-free.app"
         );
 
-        socket.onopen = function () {
+        socket.onopen = () => {
           socket.send(
             JSON.stringify({ userId, username, message: "entrou na conversa." })
           );
         };
 
-        socket.onmessage = function (event) {
+        socket.onmessage = (event) => {
           const messagesDiv = document.getElementById("messages");
           const message = document.createElement("div");
           const data = JSON.parse(event.data);
@@ -200,7 +200,7 @@
 
           messagesDiv.appendChild(message);
         };
-      }
+      };
 
       function sendMessage() {
         const messageInput = document.getElementById("messageInput");
@@ -216,13 +216,16 @@
           JSON.stringify({ userId, username, message: "saiu da conversa." })
         );
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await waitResponseTime(1000);
 
         socket.close();
         document.getElementById("chat").style.display = "none";
         document.getElementById("login").style.display = "block";
         document.getElementById("username").value = "";
       }
+      const waitResponseTime = (time) => {
+        return new Promise((resolve) => setTimeout(resolve, time));
+      };
     </script>
   </body>
 </html>
