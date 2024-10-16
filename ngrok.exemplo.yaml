@@ -1,0 +1,9 @@
+version: "2"
+authtoken: SEU TOKEN DO NGROK
+tunnels:
+  websocket:
+    addr: 8080
+    proto: http
+  httpserver:
+    addr: 8081
+    proto: http
