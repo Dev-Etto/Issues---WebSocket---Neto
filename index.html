@@ -1,231 +1,131 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat em Tempo Real</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #e8f5e9;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-      header {
-        width: 100%;
-        background-color: #2e7d32;
-        color: white;
-        text-align: center;
-        padding: 10px 0;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-      }
-      #container {
-        width: 100%;
-        max-width: 700px;
-        margin-top: 60px;
-        text-align: center;
-      }
-      #login,
-      #chat {
-        display: none;
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      #login {
-        display: block;
-      }
-      #messages {
-        border: 1px solid #ccc;
-        height: 450px;
-        overflow-y: scroll;
-        padding: 10px;
-        margin-bottom: 15px;
-        background-color: #f5f5dc;
-        border-radius: 5px;
-      }
-      .message {
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        max-width: 50%;
-        word-wrap: break-word;
-      }
-      .sent {
-        background-color: #c8e6c9;
-        text-align: left;
-        margin-right: auto;
-      }
-      .received {
-        background-color: #ffffff;
-        text-align: right;
-        margin-left: auto;
-      }
-      input[type="text"] {
-        width: calc(100% - 22px);
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-      #username {
-        width: 50%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 2px solid #2e7d32;
-        border-radius: 10px;
-        font-size: 16px;
-        text-align: center;
-      }
-      button {
-        background-color: #2e7d32;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #1b5e20;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Chat da Instaq</h1>
-    </header>
-    <div id="container">
-      <div id="login">
-        <h2>Insira seu nome</h2>
-        <p>Por favor, insira seu nome para entrar no chat.</p>
-        <input
-          type="text"
-          id="username"
-          placeholder="Seu nome"
-          autocomplete="off"
-        />
-        <button onclick="joinChat()">Entrar</button>
-        <button onclick="joinAsAnonymous()">Entrar como Anônimo</button>
-      </div>
 
-      <div id="chat">
-        <h2>Bem-vindo <span id="displayName"></span>!</h2>
-        <div id="messages"></div>
-        <input
-          type="text"
-          id="messageInput"
-          placeholder="Digite sua mensagem"
-          onkeydown="if (event.key === 'Enter') sendMessage()"
-          autocomplete="off"
-        />
-        <button onclick="sendMessage()">Enviar</button>
-        <button onclick="leaveChat()">Sair</button>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat em Tempo Real</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Chat da Instaq</h1>
+  </header>
+  <div id="container">
+    <div id="login">
+      <h2>Insira seu nome</h2>
+      <p>Por favor, insira seu nome para entrar no chat.</p>
+      <input type="text" id="username" placeholder="Seu nome" autocomplete="off" />
+      <button onclick="joinChat()">Entrar</button>
+      <button onclick="joinAsAnonymous()">Entrar como Anônimo</button>
     </div>
 
-    <script>
-      let socket;
-      let username;
-      const userId = crypto.randomUUID();
+    <div id="chat">
+      <h2>Bem-vindo <span id="displayName"></span>!</h2>
+      <div id="messages"></div>
+      <input type="text" id="messageInput" placeholder="Digite sua mensagem"
+        onkeydown="if (event.key === 'Enter') sendMessage()" autocomplete="off" />
+      <button onclick="sendMessage()">Enviar</button>
+      <button onclick="leaveChat()">Sair</button>
+    </div>
+  </div>
 
-      const disneyCharacters = [
-        "Mickey Mouse",
-        "Minnie Mouse",
-        "Pato Donald",
-        "Pateta",
-        "Pluto",
-        "Daisy Duck",
-        "Tio Patinhas",
-        "Zé Carioca",
-        "Clarabela",
-        "Horácio",
-      ];
+  <script>
+    let socket;
+    let username;
+    const userId = crypto.randomUUID();
 
-      const getRandomCharacter = () => {
-        const randomIndex = Math.floor(Math.random() * disneyCharacters.length);
-        const uniqueTag = Math.floor(Math.random() * 1000);
-        return disneyCharacters[randomIndex] + "@" + uniqueTag;
-      };
+    const disneyCharacters = [
+      "Mickey Mouse",
+      "Minnie Mouse",
+      "Pato Donald",
+      "Pateta",
+      "Pluto",
+      "Daisy Duck",
+      "Tio Patinhas",
+      "Zé Carioca",
+      "Clarabela",
+      "Horácio",
+    ];
 
-      const joinChat = () => {
-        username = document.getElementById("username").value;
-        if (!username) return alert("Por favor, insira um nome");
+    const getRandomCharacter = () => {
+      const randomIndex = Math.floor(Math.random() * disneyCharacters.length);
+      const uniqueTag = Math.floor(Math.random() * 1000);
+      return disneyCharacters[randomIndex] + "@" + uniqueTag;
+    };
 
-        startChat();
-      };
+    const joinChat = () => {
+      username = document.getElementById("username").value;
+      if (!username) return alert("Por favor, insira um nome");
 
-      const joinAsAnonymous = () => {
-        username = getRandomCharacter();
-        startChat();
-      };
+      startChat();
+    };
 
-      const startChat = () => {
-        document.getElementById("login").style.display = "none";
-        document.getElementById("chat").style.display = "block";
-        document.getElementById("displayName").innerText = username;
+    const joinAsAnonymous = () => {
+      username = getRandomCharacter();
+      startChat();
+    };
 
-        //lembra de pegar o link do ngrok da porta 8080 hahaha
-        socket = new WebSocket(
-          "https://fdb9-2804-2c14-36-9e00-719c-38d3-2bda-f8eb.ngrok-free.app"
-        );
+    const startChat = () => {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("chat").style.display = "block";
+      document.getElementById("displayName").innerText = username;
 
-        socket.onopen = () => {
-          socket.send(
-            JSON.stringify({ userId, username, message: "entrou na conversa." })
-          );
-        };
+      //lembra de pegar o link do ngrok da porta 8080 hahaha
+      socket = new WebSocket(
+        "https://1591-2804-2c14-36-9e00-2a0b-1b2f-33d-8c30.ngrok-free.app"
+      );
 
-        socket.onmessage = (event) => {
-          const messagesDiv = document.getElementById("messages");
-          const message = document.createElement("div");
-          const data = JSON.parse(event.data);
-
-          message.textContent = `${data.username} ${data.message}`;
-          message.classList.add("message");
-
-          if (data.userId === userId) {
-            message.classList.add("sent");
-          } else {
-            message.classList.add("received");
-          }
-
-          messagesDiv.appendChild(message);
-        };
-      };
-
-      function sendMessage() {
-        const messageInput = document.getElementById("messageInput");
-        const message = messageInput.value;
-        if (!message) return;
-
-        socket.send(JSON.stringify({ userId, username, message }));
-        messageInput.value = "";
-      }
-
-      async function leaveChat() {
+      socket.onopen = () => {
         socket.send(
-          JSON.stringify({ userId, username, message: "saiu da conversa." })
+          JSON.stringify({ userId, username, message: "entrou na conversa." })
         );
-
-        await waitResponseTime(1000);
-
-        socket.close();
-        document.getElementById("chat").style.display = "none";
-        document.getElementById("login").style.display = "block";
-        document.getElementById("username").value = "";
-      }
-      const waitResponseTime = (time) => {
-        return new Promise((resolve) => setTimeout(resolve, time));
       };
-    </script>
-  </body>
+
+      socket.onmessage = (event) => {
+        const messagesDiv = document.getElementById("messages");
+        const message = document.createElement("div");
+        const data = JSON.parse(event.data);
+
+        message.textContent = `${data.username} ${data.message}`;
+        message.classList.add("message");
+
+        if (data.userId === userId) {
+          message.classList.add("sent");
+        } else {
+          message.classList.add("received");
+        }
+
+        messagesDiv.appendChild(message);
+      };
+    };
+
+    function sendMessage() {
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value;
+      if (!message) return;
+
+      socket.send(JSON.stringify({ userId, username, message }));
+      messageInput.value = "";
+    }
+
+    async function leaveChat() {
+      socket.send(
+        JSON.stringify({ userId, username, message: "saiu da conversa." })
+      );
+
+      await waitResponseTime(1000);
+
+      socket.close();
+      document.getElementById("chat").style.display = "none";
+      document.getElementById("login").style.display = "block";
+      document.getElementById("username").value = "";
+    }
+    const waitResponseTime = (time) => {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    };
+  </script>
+</body>
+
 </html>

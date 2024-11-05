@@ -1,19 +1,20 @@
 {
-  "name": "issues---websocket---neto",
-  "version": "1.0.0",
-  "description": "Aprendendo a usar webSocket",
-  "main": "script.js",
-  "type": "commonjs",
-  "scripts": {
-    "dev": "concurrently \"node script.js\" \"http-server -p 8081\"",
-    "ngrok": "ngrok start --all --config ./ngrok.yaml"
-  },
-  "author": "JoaoNetoDev-code",
-  "license": "ISC",
-  "dependencies": {
-    "ws": "^8.18.0"
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.1"
-  }
+	"name": "issues---websocket---neto",
+	"version": "1.0.0",
+	"description": "Aprendendo a usar webSocket",
+	"main": "script.js",
+	"type": "commonjs",
+	"scripts": {
+		"dev": "concurrently \"node script.js\" \"http-server -p 8081\"",
+		"ngrok": "ngrok start --all --config ./ngrok.yaml"
+	},
+	"author": "JoaoNetoDev-code",
+	"license": "ISC",
+	"dependencies": {
+		"ws": "8.18.0"
+	},
+	"devDependencies": {
+		"concurrently": "9.0.1",
+		"http-server": "14.1.1"
+	}
 }
