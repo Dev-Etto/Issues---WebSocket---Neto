@@ -74,7 +74,7 @@
 
       //lembra de pegar o link do ngrok da porta 8080 hahaha
       socket = new WebSocket(
-        "https://1591-2804-2c14-36-9e00-2a0b-1b2f-33d-8c30.ngrok-free.app"
+        "https://36e1-2804-2c14-36-9e00-c145-daf4-4aa8-b0b7.ngrok-free.app"
       );
 
       socket.onopen = () => {
@@ -122,6 +122,7 @@
       document.getElementById("login").style.display = "block";
       document.getElementById("username").value = "";
     }
+    
     const waitResponseTime = (time) => {
       return new Promise((resolve) => setTimeout(resolve, time));
     };
