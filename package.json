@@ -8,7 +8,7 @@
 		"dev": "concurrently \"node script.js\" \"http-server -p 8081\"",
 		"ngrok": "ngrok start --all --config ./ngrok.yaml"
 	},
-	"author": "JoaoNetoDev-code",
+	"author": "Dev-Etto",
 	"license": "ISC",
 	"dependencies": {
 		"ws": "8.18.0"
